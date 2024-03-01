@@ -1,0 +1,19 @@
+{
+  "name": "methodologies_lab1",
+  "version": "1.0.0",
+  "description": "markdown to HTML convertor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SharpDevOps10/Methodologies_Lab1.git"
+  },
+  "author": "SharpDevOps10",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SharpDevOps10/Methodologies_Lab1/issues"
+  },
+  "homepage": "https://github.com/SharpDevOps10/Methodologies_Lab1#readme"
+}
