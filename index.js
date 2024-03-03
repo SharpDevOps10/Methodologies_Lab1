@@ -9,7 +9,7 @@ function main() {
   const outputPathIndex = args.indexOf('-out');
 
   if (inputPathIndex === -1 || args.length <= inputPathIndex + 1) {
-    console.error('Error: Input file path not provided.');
+    console.error('Error: Input file path not provided');
     process.exit(1);
   }
 
