@@ -12,14 +12,14 @@ const backtick = '```';
 const paragraphOpeningTag = '<p>';
 const paragraphClosingTag = '</p>';
 
-function processPreformattedBlock(result, isPreformattedBlock, isInPreformattedBlock) {
+const processPreformattedBlock = (result, isPreformattedBlock, isInPreformattedBlock) => {
   isPreformattedBlock[0] = !isPreformattedBlock[0];
   isInPreformattedBlock[0] = true;
   if (isPreformattedBlock[0]) result.push(preformattedBlockOpeningTag);
   else result.push(preformattedBlockClosingTag);
-}
+};
 
-function processParagraph(result, isParagraphOpen, line, isInPreformattedBlock) {
+const processParagraph = (result, isParagraphOpen, line, isInPreformattedBlock) => {
   const trimmedLine = line.trim();
   if (isInPreformattedBlock[0]) {
     result.push(line + '\n');
@@ -41,9 +41,9 @@ function processParagraph(result, isParagraphOpen, line, isInPreformattedBlock) 
     }
     result.push(line + '\n');
   }
-}
+};
 
-function countUnclosedTags(markdownContent, regex) {
+const countUnclosedTags = (markdownContent, regex) => {
   const tagRegex = /[A-Za-z0-9,]/;
   let count = 0;
   let tagMatch;
@@ -58,22 +58,22 @@ function countUnclosedTags(markdownContent, regex) {
   }
 
   return count;
-}
+};
 
-function hasUnclosedTags(markdownContent, regex) {
+const hasUnclosedTags = (markdownContent, regex) => {
   const countTags = countUnclosedTags(markdownContent, regex);
   return countTags % 2 !== 0;
-}
+};
 
-function checkForUnclosedTagsOutsideBlock(markdownContent, isInPreformattedBlock) {
+const checkForUnclosedTagsOutsideBlock = (markdownContent, isInPreformattedBlock) => {
   const tagRegexArray = [/\*\*/g, /_/g, /`/g, /```/g];
 
   if (!isInPreformattedBlock[0] && tagRegexArray.some(tagRegex => hasUnclosedTags(markdownContent, tagRegex))) {
     throw new Error('Unclosed Tag');
   }
-}
+};
 
-function isMarkingNested(markdown) {
+export const isMarkingNested = (markdown) => {
   const validTags = ['**', '`', '_'];
   let iPreformatted = false;
   let openTags = [];
@@ -114,9 +114,9 @@ function isMarkingNested(markdown) {
   }
 
   return true;
-}
+};
 
-function convertMarkdownToHTML(markdown) {
+export const convertMarkdownToHTML = (markdown) => {
   const lines = markdown.split('\n');
   const result = [];
   const isParagraphOpen = [false];
@@ -150,6 +150,4 @@ function convertMarkdownToHTML(markdown) {
   if (isPreformattedBlock[0]) throw new Error('Unclosed Tag');
 
   return htmlContent;
-}
-
-module.exports = { convertMarkdownToHTML, isMarkingNested };
+};

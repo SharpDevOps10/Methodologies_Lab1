@@ -1,10 +1,10 @@
 'use strict';
 
-const fs = require('fs');
-const { convertMarkdownToHTML } = require('./markdown-converter/markdown-converter.js');
-const { isMarkingNested } = require('./markdown-converter/markdown-converter.js');
+import fs from 'node:fs';
+import { convertMarkdownToHTML } from './markdown-converter/markdown-converter.js';
+import { isMarkingNested } from './markdown-converter/markdown-converter.js';
 
-function main() {
+const main = () => {
   const args = process.argv.slice(2);
   const inputPathIndex = args.indexOf('-in');
   const outputPathIndex = args.indexOf('-out');
@@ -30,6 +30,6 @@ function main() {
     console.error(`Error: ${err.message}`);
     process.exit(1);
   }
-}
+};
 
 main();

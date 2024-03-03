@@ -1,6 +1,7 @@
 {
   "name": "methodologies_lab1",
   "version": "1.0.0",
+  "type": "module",
   "description": "markdown to HTML convertor",
   "main": "index.js",
   "scripts": {
