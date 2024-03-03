@@ -2,15 +2,15 @@
 
 const TagMap = {
   '\\*\\*(.*?)\\*\\*': '<b>$1</b>',
-  '\\b_(.*?)_\\b': '<i>$1</i>',
+  '(?<![\\w`*])_(\\S(?:.*?\\S)?)_(?![\\w`*])': '<i>$1</i>',
   '`([^`]+)`': '<tt>$1</tt>',
 };
 
+const preformattedBlockOpeningTag = '<pre>\n';
+const preformattedBlockClosingTag = '</pre>';
+const backtick = '```';
 const paragraphOpeningTag = '<p>';
 const paragraphClosingTag = '</p>';
-const backtick = '```';
-const preformattedBlockOpeningTag = '<pre>\n';
-const preformattedBlockClosingTag = '</pre>\n';
 
 function processPreformattedBlock(result, isPreformattedBlock, isInPreformattedBlock) {
   isPreformattedBlock[0] = !isPreformattedBlock[0];
@@ -73,6 +73,49 @@ function checkForUnclosedTagsOutsideBlock(markdownContent, isInPreformattedBlock
   }
 }
 
+function isMarkingNested(markdown) {
+  const validTags = ['**', '`', '_'];
+  let iPreformatted = false;
+  let openTags = [];
+
+  for (let i = 0; i < markdown.length; i++) {
+    if (markdown.startsWith(backtick, i)) {
+      iPreformatted = !iPreformatted;
+      i += 2;
+      continue;
+    }
+
+    if (iPreformatted) continue;
+
+    for (const marker of validTags) {
+      if (markdown.startsWith(marker, i)) {
+        const isUnderscore = marker === '_';
+        const prevChar = i > 0 ? markdown[i - 1] : '';
+        const nextChar = i < markdown.length - 1 ? markdown[i + 1] : '';
+
+        if (isUnderscore) {
+          const isWordBefore = prevChar.match(/\w/);
+          const isWordAfter = nextChar.match(/\w/);
+          const isNonWordSpaceBefore = prevChar.match(/[^\w\s]/);
+          const isNonWordSpaceAfter = nextChar.match(/[^\w\s]/);
+
+          if ((isWordBefore && isWordAfter) || (isNonWordSpaceBefore && isNonWordSpaceAfter)) continue;
+        }
+
+        if (openTags.length > 0 && openTags[openTags.length - 1] !== marker) return false;
+
+        if (openTags.length > 0 && openTags[openTags.length - 1] === marker) openTags.pop();
+        else openTags.push(marker);
+
+        i += marker.length - 1;
+        break;
+      }
+    }
+  }
+
+  return true;
+}
+
 function convertMarkdownToHTML(markdown) {
   const lines = markdown.split('\n');
   const result = [];
@@ -109,4 +152,4 @@ function convertMarkdownToHTML(markdown) {
   return htmlContent;
 }
 
-module.exports = { convertMarkdownToHTML };
+module.exports = { convertMarkdownToHTML, isMarkingNested };
