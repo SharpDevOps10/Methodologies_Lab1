@@ -26,7 +26,7 @@ const countUnclosedTags = (markdownContent, regex) => {
     const tagEnd = tagMatch.index + fullMatch.length < markdownContent.length
       && markdownContent[tagMatch.index + fullMatch.length].match(tagRegex);
 
-    const isTagSurrounded = tagStart && tagEnd;
+    const isTagSurrounded = ((!tagStart && !tagEnd) || (tagStart && tagEnd));
     if (!isTagSurrounded) count++;
   }
 
