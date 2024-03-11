@@ -2,8 +2,8 @@
 
 export const formattingRules = {
   '\\*\\*(.*?)\\*\\*': '<b>$1</b>',
-  '(?<![\\w`*])_(\\S(?:.*?\\S)?)_(?![\\w`*])': '<i>$1</i>',
-  '`([^`]+)`': '<tt>$1</tt>',
+  '(?<![\\w`*\\u0400-\\u04FF])_(\\S(?:.*?\\S)?)_(?![\\w`*\\u0400-\\u04FF])': '<i>$1</i>',
+  '`([^`\\u0400-\\u04FF]+)`': '<tt>$1</tt>',
 };
 
 export const htmlTags = {
@@ -16,7 +16,7 @@ export const htmlTags = {
 export const backtick = '```';
 
 const countUnclosedTags = (markdownContent, regex) => {
-  const tagRegex = /[A-Za-z0-9,]/;
+  const tagRegex = /[A-Za-z0-9,\u0400-\u04FF]/;
   let count = 0;
   let tagMatch;
 
@@ -69,10 +69,10 @@ export const isMarkingNested = (markdown) => {
         const nextChar = i < markdown.length - 1 ? markdown[i + 1] : '';
 
         if (isUnderscore) {
-          const isWordBefore = prevChar.match(/\w/);
-          const isWordAfter = nextChar.match(/\w/);
-          const isNonWordSpaceBefore = prevChar.match(/[^\w\s]/);
-          const isNonWordSpaceAfter = nextChar.match(/[^\w\s]/);
+          const isWordBefore = prevChar.match(/[A-Za-z0-9\u0400-\u04FF]/);
+          const isWordAfter = nextChar.match(/[A-Za-z0-9\u0400-\u04FF]/);
+          const isNonWordSpaceBefore = prevChar.match(/[^\w\s\u0400-\u04FF]/);
+          const isNonWordSpaceAfter = nextChar.match(/[^\w\s\u0400-\u04FF]/);
 
           if ((isWordBefore && isWordAfter) || (isNonWordSpaceBefore && isNonWordSpaceAfter)) continue;
         }
